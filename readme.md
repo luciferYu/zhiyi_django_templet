@@ -19,3 +19,4 @@ git version 1.7.1
 - cd /data/web/
 - git clone https://github.com/luciferYu/zhiyi_django_templet.git
 - ssh-keygen -t rsa 
+- cp id_rsa.pub authorized_keys
