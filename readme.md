@@ -17,4 +17,6 @@ git version 1.7.1
 - mkdir -p /data/web
 - mkdir -p /data/exec
 - cd /data/web/
+- git clone https://github.com/luciferYu/zhiyi_django_templet.git
+
 
