@@ -1,0 +1,63 @@
+---
+- name: python_service_install
+  debug: msg="this is an empty action"
+
+- name: copy rsync binary files to remote nodes
+  copy: src=python_3.6.1.tar.gz dest=/tmp/python_3.6.1.tar.gz
+
+- name: unpacks python tar.gz
+  raw: tar zxf /tmp/python_3.6.1.tar.gz -C /data/exec/
+    
+- name: make soft link for python_3.6.1
+  file: src=/data/exec/python_3.6.1 dest=/data/exec/python state=link
+  
+- name: install libcurl-devel for python libs
+  yum: name=libcurl-devel state=present
+
+- name: install gcc for python libs
+  yum: name=gcc state=present
+
+- name: yum install python-meld3
+  yum: name=python-meld3 state=present   
+
+- name: create soft link for virtualenv
+  file: src=/data/exec/python/bin/virtualenv dest=/usr/bin/virtualenv state=link mode=0755
+
+- name: upgrade pip3 
+  shell: /data/exec/python/bin/pip3 install --upgrade pip
+
+
+- name: install virtualenv
+  pip: name=virtualenv state=present executable=/data/exec/python/bin/pip3
+- name: install virtualenvwrapper
+  pip: name=virtualenvwrapper state=present executable=/data/exec/python/bin/pip3
+
+- name: mkdir /data/pyenv
+  file: path=/data/pyenv state=directory mode=0755
+
+- name: export virtualenv variable to ~/.bashrc
+  lineinfile: dest=~/.bashrc line="export {{ item.varname }}={{ item.varvalue }}"
+  with_items:
+    - { varname: "VIRTUALENVWRAPPER_PYTHON", varvalue: "/data/exec/python/bin/python3" }
+    - { varname: "VIRTUALENVWRAPPER_VIRTUALENV", varvalue: "/data/exec/python/bin/virtualenv" }
+    - { varname: "WORKON_HOME", varvalue: "/data/pyenv" }
+
+- name: source virtualenv wrapper
+  lineinfile: dest=~/.bashrc line="source /data/exec/python_3.6.1/bin/virtualenvwrapper.sh"
+
+- name: source ~/.bashrc
+  shell: source ~/.bashrc
+
+
+- name: pip install supervisor
+  pip: name=supervisor version=3.3.1 state=present executable=/data/exec/python/bin/pip3 
+- name: mkdir /etc/supervisord
+  file: path=/etc/supervisord state=directory mode=0755
+- name: mkdir /etc/supervisord/conf.d
+  file: path=/etc/supervisord/conf.d state=directory mode=0755
+- name: upload supervisord.conf
+  copy: src=conf/supervisord.conf dest="/etc/supervisord/supervisord.conf"
+ 
+- name: start supervisord
+  raw: supervisord -c /etc/supervisord/supervisord.conf 
+  ignore_errors: True

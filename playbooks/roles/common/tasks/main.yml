@@ -1,0 +1,93 @@
+---
+#  tasks:
+    - name: install libselinux-python
+      yum: name=libselinux-python state=present 
+    - name: create a directory to store shell script files
+      file: path=/data/shell state=directory mode=0755
+    - name: copy script files to remote nodes
+      copy: src=scripts/ dest=/data/shell
+      tags: copy-script-files
+    - name: chmod 755 for script files
+      raw:  /bin/chmod 755 /data/shell/*.sh
+
+    - name: modify tcp_max_tw_buckets
+      sysctl: name="net.ipv4.tcp_max_tw_buckets" value=20000 sysctl_file="/etc/sysctl.d/http_tweak.conf" state=present ignoreerrors=yes reload=yes
+    - name: modify tcp_tw_recycle
+      sysctl: name="net.ipv4.tcp_tw_recycle" value=1 state=present ignoreerrors=yes reload=yes
+    - name: modify tcp_tw_reuse
+      sysctl: name="net.ipv4.tcp_tw_reuse" value=1 state=present ignoreerrors=yes reload=yes
+    - name: disable ipv6
+      sysctl: name="net.ipv6.conf.all.disable_ipv6" value=1 state=present ignoreerrors=yes reload=yes
+    - name: disable ipv6
+      sysctl: name="net.ipv6.conf.default.disable_ipv6" value=1 state=present ignoreerrors=yes reload=yes
+    - name: disable ipv6
+      sysctl: name="net.ipv6.conf.eth0.disable_ipv6" value=1 state=present ignoreerrors=yes reload=yes
+    - name: disable ipv6
+      sysctl: name="net.ipv6.conf.lo.disable_ipv6" value=1 state=present ignoreerrors=yes reload=yes
+
+    - name: create directory "/data/exec"
+      file: path=/data/exec state=directory mode=0755
+
+    - name: add user "webid"
+      user: name=webid createhome=no shell=/sbin/nologin
+
+    - name: copy rsync binary files to remote nodes
+      copy: src=rsync_3.1.1 dest=/data/exec/
+    - name: create soft link to /data/exec/rsync_3.1.1 on remote nodes
+      file: src=/data/exec/rsync_3.1.1 dest=/data/exec/rsync state=link
+    - name: set attribute for rsync.pwd file
+      file: path=/data/exec/rsync/pwd mode=0600
+    - name: set executable attribute for rsync
+      file: path=/data/exec/rsync/bin/rsync mode=0755
+      tags: chmod-rsync-0755
+
+    - name: add crontab entries for log_delete
+      cron: name="log_delete" minute="0" hour="1" job="/bin/sh /data/shell/log_delete.sh >/dev/null"
+
+    - name: delete 'null' in /root/.ssh/authorized_keys
+      lineinfile: dest=/root/.ssh/authorized_keys regexp="^null" state=absent
+
+    - name: add all-servers to dnsmasq.conf
+      lineinfile: dest=/etc/dnsmasq.conf line="all-servers"
+
+    - name: create ~/.pip/
+      file: path=/root/.pip state=directory  mode=0755
+
+    - name: yum install python-pip
+      yum: name=python-pip state=present  
+
+    - name: upload the limits.conf
+      copy: src=conf/limits.conf dest=/etc/security
+
+    - name: yum telnet
+      yum: pkg=telnet state=latest
+
+    - name: yum iostst
+      yum: pkg=sysstat state=latest
+
+    - name: yum ifstat
+      yum: pkg=iproute state=latest
+
+    - name: yum iptraf
+      yum: pkg=iptraf state=latest
+
+    - name: yum tcpdump
+      yum: pkg=tcpdump state=latest
+
+    - name: yum nmap
+      yum: pkg=nmap state=latest
+
+    - name: yum wireshark
+      yum: pkg=wireshark state=latest
+
+    - name: yum mtr
+      yum: pkg=mtr state=latest
+
+    - name: yum locate
+      yum: pkg=mlocate state=latest
+
+    - name: UTC TIME
+      copy: src=/usr/share/zoneinfo/Asia/Shanghai dest=/etc/localtime
+
+    - name: install cheat
+      shell: pip install cheat
