@@ -86,6 +86,11 @@
     - name: yum locate
       yum: pkg=mlocate state=latest
 
+    - name: yum openssl
+      yum: pkg=openssl state=latest
+
+    - name: yum openssl-devel
+      yum: pkg=openssl-devel state=latest
     - name: UTC TIME
       copy: src=/usr/share/zoneinfo/Asia/Shanghai dest=/etc/localtime
 

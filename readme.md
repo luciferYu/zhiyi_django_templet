@@ -6,7 +6,7 @@ CentOS release 6.10 (Final)
 
 
 - 安装epel ansible git
-yum -y install epel-release libselinux-python  git
+yum -y install epel-release libselinux-python  git zlib*
 yum -y install ansible
 
 [root@localhost ~]# ansible --version

@@ -9,7 +9,7 @@
   raw: tar zxf /tmp/Python-3.6.6.tgz -C /data/exec/
     
 - name: make soft link for python_3.6.6
-  file: src=/data/exec/python_3.6.6 dest=/data/exec/python state=link
+  file: src=/data/exec/Python-3.6.6 dest=/data/exec/python state=link
   
 - name: install libcurl-devel for python libs
   yum: name=libcurl-devel state=present
@@ -19,9 +19,6 @@
 
 - name: yum install python-meld3
   yum: name=python-meld3 state=present   
-
-- name: create soft link for virtualenv
-  file: src=/data/exec/python/bin/virtualenv dest=/usr/bin/virtualenv state=link mode=0755
 
 - name: upgrade pip3 
   shell: /data/exec/python/bin/pip3 install --upgrade pip
@@ -33,6 +30,9 @@
 
 - name: mkdir /data/pyenv
   file: path=/data/pyenv state=directory mode=0755
+
+- name: create soft link for virtualenv
+  file: src=/data/exec/python/bin/virtualenv dest=/usr/bin/virtualenv state=link mode=0755
 
 - name: export virtualenv variable to ~/.bashrc
   lineinfile: dest=~/.bashrc line="export {{ item.varname }}={{ item.varvalue }}"
