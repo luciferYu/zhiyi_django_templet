@@ -10,7 +10,7 @@
         - tcpdump 
         - wireshark 
         - mtr 
-        - locate 
+        - mlocate 
         - openssl 
         - openssl-devel 
 
