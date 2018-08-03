@@ -22,3 +22,4 @@ git version 1.7.1
 - git clone https://github.com/luciferYu/zhiyi_django_templet.git
 - ssh-keygen -t rsa 
 - cp ~/.ssh/id_rsa.pub ~/.ssh/authorized_keys
+- ansible-playbook -i hosts common.yml 
