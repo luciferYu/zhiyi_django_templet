@@ -8,6 +8,9 @@ CentOS release 6.10 (Final)
 - 安装epel ansible git
 yum -y install epel-release libselinux-python  git zlib*
 yum -y install ansible
+#yum -y install mock
+
+#useradd -s /sbin/nologin mockbuild
 
 [root@localhost ~]# ansible --version
 ansible 2.5.5

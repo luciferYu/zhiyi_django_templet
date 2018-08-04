@@ -1,29 +1,18 @@
 ---
-#- hosts: ngx_servers
-
-#  tasks:
     - name: nginx_service_install
       debug: msg="this is an empty action"
-    #- name: install repo of qiyi-cloud-computing
-    #  yum: name=qiyi-cloud-computing state=present
-    - name: install repo of cc-qlb-repo
-      yum: name=cc-qlb-repo state=present      
-    - name: install qlb_rs_deploy for QLB/LVS to transfer the real client ip to backend servers
-      yum: name=qlb_rs_deploy state=present
-    - name: load the kernel module of toa
-      raw: /sbin/modprobe toa
 
+    # http://kb.linuxvirtualserver.org/wiki/IPVS_FULLNAT_and_SYNPROXY
+    # ansible-playbook -i hosts --extra-vars "ngx_version=nginx_1.10.1" ngx-server.yml
+    #
     - name: copy nginx binary files to remote nodes
       copy: src={{ngx_version}} dest=/data/exec/ directory_mode="u=rwx,g=rx,o=rx"
-    #- name: rsync nginx files to remote nodes
-    #  local_action: command rsync -a {{ngx_version}} {{inventory_hostname}}:/data/exec/
-
 
     - name: create soft link for nginx
       file: src=/data/exec/{{ngx_version}} dest=/data/exec/nginx state=link
 
     - name: set attribute for nginx binary file
-      command: chmod 755 /data/exec/nginx/sbin/nginx
+      file: src=/data/exec/nginx/sbin/nginx mode="0755"
 
     - name: copy nginx service script file to remote nodes
       copy: src=nginx.service dest=/etc/init.d/nginx mode="0755"

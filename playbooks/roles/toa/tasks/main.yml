@@ -1,0 +1,69 @@
+---
+    - name: toa module install
+      debug: msg="this is an empty action"
+
+    # http://kb.linuxvirtualserver.org/wiki/IPVS_FULLNAT_and_SYNPROXY
+    # ansible-playbook -i hosts toa.yml
+    #
+    - name: install need package by yum
+      yum: pkg="{{ item }}" state=latest
+      with_items:
+        - gcc
+        - rpm-build
+        - redhat-rpm-config
+        - patchutils
+        - xmlto
+        - asciidoc
+        - elfutils-libelf-devel
+        - binutils-devel
+        - newt-devel
+        - python-devel
+        - perl-ExtUtils-Embed
+        - hmaccalc
+        - openssl
+        - openssl-devel
+        - pcre-devel
+        - popt-devel
+        - mock
+    
+    - name: add mockbuild user
+      user: name=mockbuild shell=/sbin/nologin state=present
+
+    - name: create pukong dir
+      file: path="{{ item }}" state=directory mode="0755"
+      with_items:
+        - /home/pukong
+        - /home/pukong/rpms
+        - /home/pukong/rpms/tmp
+        - /home/pukong/rpms/SOURCES
+        - /home/pukong/rpms/SPECS
+        - /home/pukong/rpms/SRPMS
+        - /home/pukong/rpms/RPMS
+        - /home/pukong/rpms/BUILD
+
+    - name: create software dir
+      file: path="software" state=directory mode="0755"
+
+    - name: copy kernel-2.6.32-220.23.1.el6.src.rpm
+      copy: src=kernel-2.6.32-220.23.1.el6.src.rpm dest=/data/exec/software/kernel-2.6.32-220.23.1.el6.src.rpm
+
+    - name: install kernel-2.6.32-220.23.1.el6.src.rpm
+      yum: pkg=/data/exec/software/kernel-2.6.32-220.23.1.el6.src.rpm state=present
+
+    - name: rpmbuild kernel.spec
+      shell: rpmbuild -bp kernel.spec chdir=/home/pukong/rpms/SPECS
+
+    - name: copy toa-2.6.32-220.23.1.el6.patch
+      copy: src=lvs-fullnat-synproxy/lvs-2.6.32-220.23.1.el6.patch dest=/home/pukong/rpms/BUILD/kernel-2.6.32-220.23.1.el6/linux-2.6.32-220.23.1.el6.x86_64/toa-2.6.32-220.23.1.el6.patch
+
+    - name: patch toa-2.6.32-220.23.1.el6.patch
+      shell: patch -p1<toa-2.6.32-220.23.1.el6.patch chdir=/home/pukong/rpms/BUILD/kernel-2.6.32-220.23.1.el6/linux-2.6.32-220.23.1.el6.x86_64
+
+    - name: compile and install
+      shell: make -j16 chdir=/home/pukong/rpms/BUILD/kernel-2.6.32-220.23.1.el6/linux-2.6.32-220.23.1.el6.x86_64
+
+    - name: compile and install2
+      shell: make modules_install chdir=/home/pukong/rpms/BUILD/kernel-2.6.32-220.23.1.el6/linux-2.6.32-220.23.1.el6.x86_64
+
+    - name: compile and install3
+      shell: make install chdir=/home/pukong/rpms/BUILD/kernel-2.6.32-220.23.1.el6/linux-2.6.32-220.23.1.el6.x86_64

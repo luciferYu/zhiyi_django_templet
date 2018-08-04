@@ -1,0 +1,118 @@
+-------------------------------------------------------------------------
+-LVS new feature
+
+1.FULLNAT
+  A new packet forwarding model as DR/NAT/TUNNEL;
+  The main principle: introduce local address (IDC internal ip address), translate cip-vip to lip-rip, lip and rip both are IDC internal ip address, so LVS-RS can be inter-vlan communication, and RS only need access to internal network.
+
+2.SYNPROXY
+  Synflood attack defence module,  based on tcp syncookies;
+  The main principle: refer to http://en.wikipedia.org/wiki/SYN_cookies;
+
+3. TOA
+  A new tcp option as Address, here Address including IP and Port.
+  With LVS FULLNAT model, the real {IP,Port} can be added into option field of TCP header, the realservice are still able to receive real {IP,Port} info.
+  So far, this module only supports IPv4 and IPv6 mapped IPv4.
+
+-Building
+
+1. LVS Kernel
+1.1 get kernel rpm from redhat
+  wget ftp://ftp.redhat.com/pub/redhat/linux/enterprise/6Server/en/os/SRPMS/kernel-2.6.32-220.23.1.el6.src.rpm
+
+1.2 get kernel source code from rpm
+  vim ~/.rpmmacros;
+    add:
+      %_topdir /home/pukong/rpms
+      %_tmppath /home/pukong/rpms/tmp
+      %_sourcedir /home/pukong/rpms/SOURCES
+      %_specdir /home/pukong/rpms/SPECS
+      %_srcrpmdir /home/pukong/rpms/SRPMS
+      %_rpmdir /home/pukong/rpms/RPMS
+      %_builddir /home/pukong/rpms/BUILD
+  cd /home/pukong;
+    mkdir rpms;
+    mkdir rpms/tmp;
+    mkdir rpms/SOURCES;
+    mkdir rpms/SPECS;
+    mkdir rpms/SRPMS;
+    mkdir rpms/RPMS;
+    mkdir rpms/BUILD;
+  rpm -ivh kernel-2.6.32-220.23.1.el6.src.rpm;
+  cd /home/pukong/rpms/SPECS;
+  rpmbuild -bp kernel.spec;
+
+  then you can find kernel source code in /home/pukong/rpms/BUILD.
+
+1.3 add lvs patch
+  cd /home/pukong/rpms/BUILD/;
+  cd kernel-2.6.32-220.23.1.el6/linux-2.6.32-220.23.1.el6.x86_64/;
+  cp lvs-2.6.32-220.23.1.el6.patch ./;
+  patch -p1<lvs-2.6.32-220.23.1.el6.patch;
+
+1.4 compile and install
+  make -j16;
+  make modules_install;
+  make install;
+
+2. RealServer Kernel (TOA)
+2.1 get kernel source code, the same as step 1.1 and 1.2;
+
+2.2 add toa patch
+  cd /home/pukong/rpms/BUILD/;
+  cd kernel-2.6.32-220.23.1.el6/linux-2.6.32-220.23.1.el6.x86_64/;
+  cp toa-2.6.32-220.23.1.el6.patch ./;
+  patch -p1<toa-2.6.32-220.23.1.el6.patch;
+
+2.3 compile and install
+  make -j16;
+  make modules_install;
+  make install;
+
+3. LVS Tools (keepalived/ipvsadm/quaage)
+  cd /home/pukong;
+  cp lvs-tools.tar.gz ./;
+  tar xzf lvs-tools.tar.gz;
+  cd tools;
+
+3.1 keepalived install
+  cd keepalived;
+  ./configure --with-kernel-dir="/lib/modules/`uname -r`/build";
+  make;
+  make install;
+
+3.2 ipvsadm install
+  cd ipvsadm;
+  make;
+  make install;
+
+3.3 quaage install
+  cd quagga;
+  ./configure --disable-ripd --disable-ripngd --disable-bgpd --disable-watchquagga --disable-doc  --enable-user=root --enable-vty-group=root --enable-group=root --enable-zebra --localstatedir=/var/run/quagga
+make
+  make;
+  make install;
+
+Jiaming Wu	<pukong.wjm@taobao.com>
+Jian Chen	<jian.chen1225@gmail.com>
+Jiajun Chen	<mofan.cjj@taobao.com>
+Ziang Chen	<yanfei.cza@taobao.com>
+Wensong Zhang	<zhengming@taobao.com>
+
+--------------------------------------------------------------------------
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+--------------------------------------------------------------------
