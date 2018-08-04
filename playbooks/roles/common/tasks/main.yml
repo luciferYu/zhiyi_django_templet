@@ -1,7 +1,19 @@
 ---
 #  tasks:
-    - name: install libselinux-python
-      yum: name=libselinux-python state=present 
+    - name: install need package by yum
+      yum: pkg="{{ item }}" state=latest
+      with_items:
+        - libselinux-python
+        - telnet
+        - iproute 
+        - iptraf 
+        - tcpdump 
+        - wireshark 
+        - mtr 
+        - locate 
+        - openssl 
+        - openssl-devel 
+
     - name: create a directory to store shell script files
       file: path=/data/shell state=directory mode=0755
     - name: copy script files to remote nodes
@@ -59,38 +71,6 @@
     - name: upload the limits.conf
       copy: src=conf/limits.conf dest=/etc/security
 
-    - name: yum telnet
-      yum: pkg=telnet state=latest
-
-    - name: yum iostst
-      yum: pkg=sysstat state=latest
-
-    - name: yum ifstat
-      yum: pkg=iproute state=latest
-
-    - name: yum iptraf
-      yum: pkg=iptraf state=latest
-
-    - name: yum tcpdump
-      yum: pkg=tcpdump state=latest
-
-    - name: yum nmap
-      yum: pkg=nmap state=latest
-
-    - name: yum wireshark
-      yum: pkg=wireshark state=latest
-
-    - name: yum mtr
-      yum: pkg=mtr state=latest
-
-    - name: yum locate
-      yum: pkg=mlocate state=latest
-
-    - name: yum openssl
-      yum: pkg=openssl state=latest
-
-    - name: yum openssl-devel
-      yum: pkg=openssl-devel state=latest
     - name: UTC TIME
       copy: src=/usr/share/zoneinfo/Asia/Shanghai dest=/etc/localtime
 

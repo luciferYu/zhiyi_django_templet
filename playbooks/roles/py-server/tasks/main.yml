@@ -5,6 +5,12 @@
 - name: copy rsync binary files to remote nodes
   copy: src=Python-3.6.6.tgz dest=/tmp/Python-3.6.6.tgz
 
+- name: create ~/.pip dir
+  file: path=~/.pip state=directory 
+
+- name: copy pip file
+  copy: src=conf/pip.conf dest=/root/.pip/pip.conf
+
 - name: unpacks python tar.gz
   raw: tar zxf /tmp/Python-3.6.6.tgz -C /data/exec/
     
