@@ -40,3 +40,8 @@ git version 1.7.1
         initrd /initramfs-2.6.32-754.el6.x86_64.img
 - reboot
 - ansible-playbook -i hosts ngx-server.yml --extra-vars 'ngx_version=nginx_1.10.1' 
+
+
+
+#django
+- pip install -r requirements.txt
