@@ -1,0 +1,8 @@
+add:
+     %_topdir /home/pukong/rpms
+     %_tmppath /home/pukong/rpms/tmp
+     %_sourcedir /home/pukong/rpms/SOURCES
+     %_specdir /home/pukong/rpms/SPECS
+     %_srcrpmdir /home/pukong/rpms/SRPMS
+     %_rpmdir /home/pukong/rpms/RPMS
+     %_builddir /home/pukong/rpms/BUILD

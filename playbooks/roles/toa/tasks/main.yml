@@ -41,14 +41,18 @@
         - /home/pukong/rpms/RPMS
         - /home/pukong/rpms/BUILD
 
+
+    - name: copy rpmmacros
+      copy: src=rpmmacros dest=~/.rpmmacros
+
     - name: create software dir
-      file: path="software" state=directory mode="0755"
+      file: path="/data/exec/software" state=directory mode="0755"
 
     - name: copy kernel-2.6.32-220.23.1.el6.src.rpm
       copy: src=kernel-2.6.32-220.23.1.el6.src.rpm dest=/data/exec/software/kernel-2.6.32-220.23.1.el6.src.rpm
 
     - name: install kernel-2.6.32-220.23.1.el6.src.rpm
-      yum: pkg=/data/exec/software/kernel-2.6.32-220.23.1.el6.src.rpm state=present
+      shell: rpm -ivh kernel-2.6.32-220.23.1.el6.src.rpm chdir=/data/exec/software
 
     - name: rpmbuild kernel.spec
       shell: rpmbuild -bp kernel.spec chdir=/home/pukong/rpms/SPECS
