@@ -6,3 +6,7 @@ from django.http import HttpResponse
 
 def status(request):
     return HttpResponse('ok')
+
+
+def test_image(request):
+    return render(request, 'web/test_image.html', locals())
