@@ -1,0 +1,15 @@
+{# 继承父模板 #}
+{% extends 'common/base.html' %}
+{% load staticfiles %}
+{# 头部js #}
+{% block header_js %}
+{% endblock header_js %}
+
+{% block body %}
+    <div>
+        <h1>Test Shell</h1>
+        <p>{{ result }}</p></div>
+{% endblock body %}
+
+{% block footer_js %}
+{% endblock footer_js %}

@@ -1,6 +1,7 @@
 #!/data/exec/python/bin/python3
 # -*- coding:utf-8 -*-
 # auth Yuzhiyi
+import time
 
 def post(request, key):
     return request.POST.get(key, '').strip()
@@ -75,7 +76,14 @@ def flush_session(request):
     '''
     request.session.flush()
 
-
+def time_counter(func):
+    def inner(*args,**kwargs):
+        pc_start = time.perf_counter()
+        ret = func(*args,**kwargs)
+        pc_end = time.perf_counter()
+        print('use time {:.16f}'.format(float(pc_end - pc_start)))
+        return ret
+    return inner
 
 
 
