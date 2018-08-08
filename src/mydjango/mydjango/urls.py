@@ -16,8 +16,11 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.conf.urls import include
+from django.views.generic import RedirectView
+
 
 urlpatterns = [
+    url(r'^$',RedirectView.as_view(url=r'admin/')),
     url(r'^admin/', admin.site.urls),
     url(r'^v1/', include('v1.urls', namespace='v1')),
     url(r'^web/', include('web.urls', namespace='web')),
