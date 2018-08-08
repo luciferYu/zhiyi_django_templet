@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import django.utils.log
+import logging.handlers
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -127,3 +129,45 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]  # 指定静态文件路径
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+
+# logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s [%(threadName)s:%(thread)d] [%(name)s:%(lineno)d] [%(module)s:%(funcName)s] [%(levelname)s]- %(message)s'
+        }  # 日志格式
+    },
+    'handlers': {
+        'default': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '/data/log/mydjango/all.log',  # 日志输出文件
+            'maxBytes': 1024 * 1024 * 50,  # 文件大小
+            'backupCount': 5,  # 备份份数
+            'formatter': 'standard',  # 使用哪种formatters日志格式
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard'
+        },
+        'access': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '/data/log/mydjango/access.log',  # 日志输出文件
+            'maxBytes': 1024 * 1024 * 50,  # 文件大小
+            'backupCount': 5,  # 备份份数
+            'formatter': 'standard',  # 使用哪种formatters日志格式
+        },
+    },
+    'loggers': {
+        # 'django': {
+        #     'handlers': ['default'],
+        #     'level': 'DEBUG',
+        #     'propagate': True,
+        # },
+        'access_log':{
+            'handlers': ['access'] ,
+            'level': 'DEBUG',
+        }
+    },
+}
