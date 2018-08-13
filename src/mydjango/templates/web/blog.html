@@ -1,0 +1,32 @@
+{# 继承父模板 #}
+{% extends 'common/base.html' %}
+{% load staticfiles %}
+{# 头部js #}
+{% block header_js %}
+{% endblock header_js %}
+
+{% block body %}
+    <div>
+        {{ blog.name }}
+        {{ blog.tagline }}
+    </div>
+    {% for entry in entrys %}
+        <div>
+            <span>{{ entry.headline }}</span>
+            <span>{{ entry.body_text }}</span>
+            <span>{{ entry.pub_date }}</span>
+            <span>{{ entry.mod_date }}</span>
+            <span>{{ entry.n_comments }}</span>
+        </div>
+    {% endfor %}
+    <br>
+    <h1>blog json</h1>
+    <div>{{ blogserializer.data }}</div>
+
+{#    <br>#}
+{#    <h1>entrys json</h1>#}
+{#    <div>{{ entrysserializer.data }}</div>#}
+{% endblock body %}
+
+{% block footer_js %}
+{% endblock footer_js %}

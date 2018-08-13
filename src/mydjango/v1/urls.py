@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^status$', status, name='status'),
     url(r'book', book, name='book'),
     url(r'^', include(router.urls)),
+    url(r'^blog/(\d+)/',blog,name='blog'),
 ]
 
 if __name__ == '__main__':

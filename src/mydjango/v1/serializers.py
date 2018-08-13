@@ -24,6 +24,29 @@ class BookInfoSerializer(serializers.Serializer):
     bcomment = serializers.IntegerField(label='评论量', required=False)
 
 
+# class BlogSerializer(serializers.Serializer):
+#     name = serializers.CharField(label='名称')
+#     tagline = serializers.CharField(label='标签')
+
+class EntrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Entry
+        fields = '__all__'
+
+
+class BlogSerializer(serializers.ModelSerializer):
+    #entry = EntrySerializer(many=True)
+    class Meta:
+        model = Blog
+        fields = '__all__'
+
+
+class AuthorSerializer(serializers.Serializer):
+    name = serializers.CharField(label='姓名', max_length=20)
+    email = serializers.EmailField()
+
+
+
 
 
 if __name__ == '__main__':

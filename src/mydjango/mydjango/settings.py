@@ -90,7 +90,15 @@ DATABASES = {
         'PASSWORD': 'mydjango',
         'HOST': '192.168.28.130',
         'PORT': '3306',
-    }
+    },
+    'read': {   #配置读写分离
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'mydjango',
+        'USER': 'mydjango',
+        'PASSWORD': 'mydjango',
+        'HOST': '192.168.28.130',
+        'PORT': '3306',
+    },
 }
 
 # Password validation
@@ -161,11 +169,11 @@ LOGGING = {
         },
     },
     'loggers': {
-        # 'django': {
-        #     'handlers': ['default'],
-        #     'level': 'DEBUG',
-        #     'propagate': True,
-        # },
+        'django': {
+            'handlers': ['default'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
         'access_log':{
             'handlers': ['access'] ,
             'level': 'DEBUG',
