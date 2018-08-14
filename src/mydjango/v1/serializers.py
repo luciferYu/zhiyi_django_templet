@@ -35,7 +35,8 @@ class EntrySerializer(serializers.ModelSerializer):
 
 
 class BlogSerializer(serializers.ModelSerializer):
-    #entry = EntrySerializer(many=True)
+    entry = EntrySerializer(many=True)
+
     class Meta:
         model = Blog
         fields = '__all__'

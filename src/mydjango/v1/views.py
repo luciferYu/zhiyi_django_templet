@@ -32,9 +32,8 @@ def blog(request,bid):
             logger.error('访问blog参数错误')
             return HttpResponse('404 没有找到')
         else:
-            entrys = blog.entry_set.all()
-            #entrysserializer = EntrySerializer(entrys)
-            return render(request,'web/blog.html',locals())
+            return JsonResponse(blogserializer.data)
+            #return render(request,'web/blog.html',locals())
 
 class TestChildViewSet(ModelViewSet):
     queryset = TestChild.objects.all().order_by('child_name')
