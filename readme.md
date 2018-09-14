@@ -25,21 +25,21 @@ git version 1.7.1
 - ansible-playbook -i hosts common.yml 
 - ansible-playbook -i hosts py-server.yml 
 - ansible-playbook -i hosts  toa.yml
-- vim /boot/grub/grub.conf
-  default=0 #modify this to 2.6.32
-  timeout=5
-  splashimage=(hd0,0)/grub/splash.xpm.gz
-  hiddenmenu
-  title CentOS (2.6.32)
-        root (hd0,0)
-        kernel /vmlinuz-2.6.32 ro root=UUID=eda6c32f-5659-43e2-be25-5f0dff7542c7 rd_NO_LUKS rd_NO_LVM LANG=en_US.UTF-8 rd_NO_MD SYSFONT=latarcyrheb-sun16 crashkernel=auto  KEYBOARDTYPE=pc KEYTABLE=us rd_NO_DM rhgb quiet
-        initrd /initramfs-2.6.32.img
-  title CentOS 6 (2.6.32-754.el6.x86_64)
-        root (hd0,0)
-        kernel /vmlinuz-2.6.32-754.el6.x86_64 ro root=UUID=eda6c32f-5659-43e2-be25-5f0dff7542c7 rd_NO_LUKS rd_NO_LVM LANG=en_US.UTF-8 rd_NO_MD SYSFONT=latarcyrheb-sun16 crashkernel=auto  KEYBOARDTYPE=pc KEYTABLE=us rd_NO_DM rhgb quiet
-        initrd /initramfs-2.6.32-754.el6.x86_64.img
-- reboot
-- ansible-playbook -i hosts ngx-server.yml --extra-vars 'ngx_version=nginx_1.10.1' 
+- vim /boot/grub/grub.conf  
+  default=0 #modify this to 2.6.32  
+  timeout=5  
+  splashimage=(hd0,0)/grub/splash.xpm.gz  
+  hiddenmenu  
+  title CentOS (2.6.32)  
+        root (hd0,0)  
+        kernel /vmlinuz-2.6.32 ro root=UUID=eda6c32f-5659-43e2-be25-5f0dff7542c7 rd_NO_LUKS rd_NO_LVM LANG=en_US.UTF-8 rd_NO_MD SYSFONT=latarcyrheb-sun16 crashkernel=auto  KEYBOARDTYPE=pc KEYTABLE=us rd_NO_DM rhgb quiet  
+        initrd /initramfs-2.6.32.img  
+  title CentOS 6 (2.6.32-754.el6.x86_64)  
+        root (hd0,0)  
+        kernel /vmlinuz-2.6.32-754.el6.x86_64 ro root=UUID=eda6c32f-5659-43e2-be25-5f0dff7542c7 rd_NO_LUKS rd_NO_LVM LANG=en_US.UTF-8 rd_NO_MD SYSFONT=latarcyrheb-sun16 crashkernel=auto  KEYBOARDTYPE=pc KEYTABLE=us rd_NO_DM rhgb quiet  
+        initrd /initramfs-2.6.32-754.el6.x86_64.img  
+- reboot  
+- ansible-playbook -i hosts ngx-server.yml --extra-vars 'ngx_version=nginx_1.10.1'  
 
 
 
