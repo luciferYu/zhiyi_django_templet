@@ -43,5 +43,5 @@ git version 1.7.1
 
 
 
-#django
+# django
 - pip install -r requirements.txt
