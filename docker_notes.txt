@@ -27,6 +27,9 @@ sudo systemctl start docker   #启动服务
 ## 更换国内镜像源 详见
 https://docs.docker.com/config/daemon/#troubleshoot-conflicts-between-the-daemonjson-and-startup-scripts
 
+## docker镜像网址
+https://hub.docker.com/r/library/
+
 
 ## 容器使用
 cd /data/web/WochuServerCenter/;/usr/local/python-3.6/bin/uwsgi --ini uwsgi.ini
@@ -236,13 +239,178 @@ daby00p8swqg        wsc_visualizer      replicated          1/1                 
 nwx7bmnn9eb7        wsc_web             replicated          5/5                 lucifery/wsc:latest               *:80->8000/tcp
 
 
-
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 docker stack ls                                            # List stacks or apps
 docker stack deploy -c <composefile> <appname>  # Run the specified Compose file
 docker service ls                 # List running services associated with an app
 docker service ps <service>                  # List tasks associated with an app
-docker inspect <task or container>                   # Inspect task or container
+docker inspect <task or container>                   # Inspect task or container  
 docker container ls -q                                      # List container IDs
 docker stack rm <appname>                             # Tear down an application
 docker swarm leave --force      # Take down a single node swarm from the manager
+
+
+[root@localhost wsc]# docker system df
+TYPE                TOTAL               ACTIVE              SIZE                RECLAIMABLE
+Images              19                  4                   2.485GB             1.382GB (55%)
+Containers          13                  4                   3.321MB             2.657MB (79%)
+Local Volumes       2                   1                   491.7MB             281MB (57%)
+Build Cache         0                   0                   0B                  0B
+
+
+docker inspect jenkins  #查看jenkins镜像的详细信息
+
+
+## apline linux
+apk add uwsgi-python3=2.0.17-r1
+apk add gcc build-base python3-dev
+uwsgi --chdir /web  --plugin python3 --wsgi-file  ./WochuServerCenter/wsgi.py --static-map /static=/web/static --pidfile=/var/run/wsc.pid --master --processes=2 --threads=4 --http-socket 0.0.0.0:8000
+docker build  --no-cache -t wsc-alpline:v4 --build-arg username=username --build-arg password=password .
+docker run -d  -v /data/web/WochuServerCenter:/web -p 83:50001 wsc-alpine:v1
+docker run -d -v /data/log:/web/WochuServerCenter/log -p 83:50001 wsc-alpline:v5
+
+
+
+## rabbitmq 官方镜像使用
+#docker run -d --hostname my-rabbit --name some-rabbit rabbitmq:3
+#docker run -d --hostname my-rabbit --name some-rabbit -e RABBITMQ_ERLANG_COOKIE='secret cookie here' rabbitmq:3
+#docker run -d --hostname my-rabbit --name some-rabbit rabbitmq:3-management
+#docker run -d --hostname my-rabbit --name some-rabbit -e RABBITMQ_DEFAULT_USER=user -e RABBITMQ_DEFAULT_PASS=password rabbitmq:3-management
+#docker run -d --hostname wochu-rabbit --name wochu-rabbit -e RABBITMQ_ERLANG_COOKIE='wochu cookie here' -e RABBITMQ_DEFAULT_USER=wochu -e RABBITMQ_DEFAULT_PASS=wochu123  rabbitmq:3.6-management-alpine
+docker run -d  -p 15672:15672 -p 5672:5672 -p 25672:25672 --hostname wochu-rabbit --name wochu-rabbit -e RABBITMQ_ERLANG_COOKIE='wochu cookie here' -e RABBITMQ_DEFAULT_USER=wochu -e RABBITMQ_DEFAULT_PASS=wochu123  rabbitmq:3.6-management-alpine
+4369 – erlang发现口
+5672 –client端通信口
+15672 – 管理界面ui端口
+25672 – server间内部通信口
+
+
+## mongo
+#docker run -d --name some-mongo -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=secret mongo
+#docker run --name some-mongo -v /my/own/datadir:/data/db -d mongo
+docker run -d --name some-mongo -v /data/mongo:/data/db -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=secret mongo
+
+
+## Prometheus
+# 参考链接 
+1.运行Node Exporter
+#https://github.com/prometheus/node_exporter
+#错误 供参考docker run -d -p 9100:9100 -v /proc:/host/proc -v /sys:/host/sys -v /:/rootfs --net=host prom/node-exporter -collector.procfs /host/proc -collector.sysfs /host/sys -collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($|/)"
+docker run -d -p 9100:9100 -v "/proc:/host/proc" -v "/sys:/host/sys" -v "/:/rootfs" --net=host prom/node-exporter --path.procfs /host/proc --path.sysfs /host/sys --collector.filesystem.ignored-mount-points "^/(sys|proc|dev|)"
+#docker run -d -p 9100:9100  --net="host" --pid="host" --name node-exporter -v "/:/host:ro,rslave" quay.io/prometheus/node-exporter --path.rootfs /host
+浏览器中通过http://ip:9100/metrics测试一下
+2.运行cadvisor
+docker run -d -p 8080:8080 --network host --name cadvisor -v /:/rootfs:ro -v /var/run:/var/run:rw -v /sys:/sys:ro -v /var/lib/docker/:/var/lib/docker:ro google/cadvisor:latest
+http://ip:8080/metrics测试
+3.运行prometheus
+mkdir /root/prometheus
+vi /root/prometheus/prometheus.yml
+----------------------------------------------------------------
+global:
+  scrape_interval:     15s # By default, scrape targets every 15 seconds.
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+    monitor: 'codelab-monitor'
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+
+    static_configs:
+      - targets: ['localhost:9090','localhost:8080','localhost:9100','192.168.14.33:8080','192.168.14.33:9100']
+----------------------------------------------------------------
+docker run -d -p 9090:9090 -v /root/prometheus:/etc/prometheus --name prometheus --network host prom/prometheus
+可以通过http://ip:9090/metrics测试一下
+http://ip:9090/graph
+http://192.168.14.35:9090/targets
+4.运行grafana
+docker run -d -p 3000:3000 --name=grafana --network host  -e "GF_SERVER_ROOT_URL=http://grafana.server.name" -e "GF_SECURITY_ADMIN_PASSWORD=secret"  grafana/grafana
+注：这里我们依然使用的是host网络，这样grafana可以直接与prometheus server进行通信 -e "GF_SECURITY_ADMIN_PASSWORD=secret" 指定了grafana admin用户密码：secret
+grafana启动后。在浏览器中打开http://ip:3000
+ 登录后，grafana将引导我们配置Data source
+Name为data source命名
+例如：prometheus
+Type选择prometheus
+Url输入：prometheus server的地址：http://ip:9090
+其他值保持默认，点击add
+
+现在grafana就可以访问prometheus server中存放的数据了，那么如何让展示呢？
+grafana是通过dashboard展示数据的，在dashboard中需要定义
+	1.展示prometheus的那些数据？需要给出具体的查询语句表达式
+	2.用什么形式展示，比如：二维线性图，仪表图，各种坐标的含义
+可见要做出一个dashboard也是一件不容易的事情。还好，我们可以借助开源社区的力量，直接俄使用现成的dashboard。
+访问：https://grafana.com/dashboards?dataSource=prometheus&search=docker
+，将会看到很多用于监控docker的dashboard  下载 并在grafana中导入
+例如 https://grafana.com/dashboards/893/revisions
+
+
+
+## ELk
+vi /etc/sysctl.conf
+vm.max_map_count=262145
+systctl -p
+docker run -p 5601:5601 -p 9200:9200 -p 5044:5044 -it --name elk   sebp/elk
+5601: Kibana web接口访问 http://ip:5601 访问kibana
+9200： Elasticsearch JSON接口 访问http://ip:9200/_search?pretty
+5044：Logstash 日志接收接口
+
+安装filebeat
+#https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation.html
+curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.4.2-x86_64.rpm
+rpm -vi filebeat-6.4.2-x86_64.rpm
+
+vim /etc/filebeat/filebeat.yml
+enabled: true
+paths:
+    - /var/lib/docker/containers/*/*.log
+    - /var/log/syslog
+output.elasticsearch:
+  # Array of hosts to connect to.
+  hosts: ["192.168.14.33:9200"]
+systemctl start filebeat.service
+访问http://ip:9200/_search?pretty 查看是否有index了
+
+配置kibanna - management - kibana - index patterns
+
+运行一个测试输出日志容器
+docker run busybox sh -c 'while true;do echo "this is a log message from container busybox";sleep 5;done;'
+在Kibana web接口访问 http://ip:5601  - discover - 输入 busybox 来查看生成的日志
+
+## 参考文献
+Docker官方英文资源
+docker官网：http://www.docker.com
+
+Docker windows入门：https://docs.docker.com/windows/
+
+Docker Linux 入门：https://docs.docker.com/linux/
+
+Docker mac 入门：https://docs.docker.com/mac/
+
+Docker 用户指引：https://docs.docker.com/engine/userguide/
+
+Docker 官方博客：http://blog.docker.com/
+
+Docker Hub: https://hub.docker.com/
+
+Docker开源： https://www.docker.com/open-source
+
+Docker中文资源
+Docker中文网站：https://www.docker-cn.com/
+
+Docker安装手册：https://docs.docker-cn.com/engine/installation/
+
+Docker 国内镜像
+网易加速器：http://hub-mirror.c.163.com
+
+官方中国加速器：https://registry.docker-cn.com
+
+ustc的镜像：https://docker.mirrors.ustc.edu.cn
+
+daocloud：https://www.daocloud.io/mirror#accelerator-doc（注册后使用）
