@@ -1,0 +1,1286 @@
+{
+	"info": {
+		"_postman_id": "73919ad5-dd19-443d-897f-35ca545b9d89",
+		"name": "ELK",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "搜索",
+			"item": [
+				{
+					"name": "搜索索引名为bank全部文档根据account_number排序通过url",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search?q=*&sort=account_number:asc&pretty",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "*"
+								},
+								{
+									"key": "sort",
+									"value": "account_number:asc"
+								},
+								{
+									"key": "pretty",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索索引名为bank全部文档根据account_number排序通过body",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": { \"match_all\": {} },\r\n  \"sort\": [\r\n    { \"account_number\": \"asc\" }\r\n  ]\r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索 查询一条记录",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": { \"match_all\": {} },\r\n  \"size\":1\r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索 从第十条记录开始查询十条记录",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": { \"match_all\": {} },\r\n  \"from\":10,\r\n  \"size\":10\r\n  \r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索根据balance排序",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": { \"match_all\": {} },\r\n  \"sort\": { \"balance\": { \"order\": \"desc\" } }\r\n  \r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索返回指定的列",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": { \"match_all\": {} },\r\n  \"_source\":[\"account_number\",\"balance\"]\r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索account_number 等于20",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": { \"match\": {\"account_number\":20} }\r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索address包含mill的记录",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": { \"match\": {\"address\": \"mill\"} }\r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索address包含mill或lane的记录 match",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": { \"match\": {\"address\": \"mill lane\"} }\r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索address包含mill lane 短语的记录 match_phrase",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": { \"match_phrase\": {\"address\": \"mill lane\"} }\r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索address包含mill 与 lane 短语的记录 bool must",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": {\r\n  \t\t\"bool\":{ \r\n  \t\t\t\t\"must\":[\r\n  \t\t\t\t\t{\"match\": {\"address\": \"mill\"}},\r\n  \t\t\t\t\t{\"match\": {\"address\": \"lane\"}}\r\n  \t\t\t\t\t]  \r\n  \t\t\t}\r\n  \t} \r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索address包含mill 或 lane 短语的记录 bool should",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": {\r\n  \t\t\"bool\":{ \r\n  \t\t\t\t\"should\":[\r\n  \t\t\t\t\t{\"match\": {\"address\": \"mill\"}},\r\n  \t\t\t\t\t{\"match\": {\"address\": \"lane\"}}\r\n  \t\t\t\t\t]  \r\n  \t\t\t}\r\n  \t} \r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索address不包含mill 或 lane 短语的记录 bool must_not",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": {\r\n  \t\t\"bool\":{ \r\n  \t\t\t\t\"must_not\":[\r\n  \t\t\t\t\t{\"match\": {\"address\": \"mill\"}},\r\n  \t\t\t\t\t{\"match\": {\"address\": \"lane\"}}\r\n  \t\t\t\t\t]  \r\n  \t\t\t}\r\n  \t} \r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索40岁但不是住在州简称ID 混合使用 must和must_not",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": {\r\n    \"bool\": {\r\n      \"must\": [\r\n        { \"match\": { \"age\": \"40\" } }\r\n      ],\r\n      \"must_not\": [\r\n        { \"match\": { \"state\": \"ID\" } }\r\n      ]\r\n    }\r\n  }\r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索balance大于等于2万小于等于3万的记录 filter range",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": {\r\n    \"bool\": {\r\n      \"must\": { \"match_all\": {} },\r\n      \"filter\": {\r\n        \"range\": {\r\n          \"balance\": {\r\n            \"gte\": 20000,\r\n            \"lte\": 30000\r\n          }\r\n        }\r\n      }\r\n    }\r\n  }\r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索聚合每个state(州)的账户(accounts) 获取前10名按州排序",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"size\": 0,\r\n  \"aggs\": {\r\n    \"group_by_state\": {\r\n      \"terms\": {\r\n        \"field\": \"state.keyword\"\r\n      }\r\n    }\r\n  }\r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索每个state的平均blance最高的10个state",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"size\": 0,\r\n  \"aggs\": {\r\n    \"group_by_state\": {\r\n      \"terms\": {\r\n        \"field\": \"state.keyword\"\r\n      },\r\n      \"aggs\": {\r\n        \"average_balance\": {\r\n          \"avg\": {\r\n            \"field\": \"balance\"\r\n          }\r\n        }\r\n      }\r\n    }\r\n  }\r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索每个state的平均blance最低的10个state",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"size\": 0,\r\n  \"aggs\": {\r\n    \"group_by_state\": {\r\n      \"terms\": {\r\n        \"field\": \"state.keyword\"\r\n      },\r\n      \"aggs\": {\r\n        \"average_balance\": {\r\n          \"avg\": {\r\n            \"field\": \"balance\"\r\n          }\r\n        }\r\n      }\r\n    }\r\n  }\r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索20-30,30-40,40-50年龄段不同性别的平均balance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"size\": 0,\r\n  \"aggs\": {\r\n    \"group_by_age\": {\r\n      \"range\": {\r\n        \"field\": \"age\",\r\n        \"ranges\": [\r\n          {\r\n            \"from\": 20,\r\n            \"to\": 30\r\n          },\r\n          {\r\n            \"from\": 30,\r\n            \"to\": 40\r\n          },\r\n          {\r\n            \"from\": 40,\r\n            \"to\": 50\r\n          }\r\n        ]\r\n      },\r\n      \"aggs\": {\r\n        \"group_by_gender\": {\r\n          \"terms\": {\r\n            \"field\": \"gender.keyword\"\r\n          },\r\n          \"aggs\": {\r\n            \"average_balance\": {\r\n              \"avg\": {\r\n                \"field\": \"balance\"\r\n              }\r\n            }\r\n          }\r\n        }\r\n      }\r\n    }\r\n  }\r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/bank/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索索引名为filebeat...全部通过url",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/filebeat-6.4.2-2018.10.18/_search?q=*&pretty",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"filebeat-6.4.2-2018.10.18",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "*"
+								},
+								{
+									"key": "pretty",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "集群",
+			"item": [
+				{
+					"name": "查询集群简况状态",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/_cat/health?v",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"_cat",
+								"health"
+							],
+							"query": [
+								{
+									"key": "v",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查询节点信息接口",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/_cat/nodes?v",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"_cat",
+								"nodes"
+							],
+							"query": [
+								{
+									"key": "v",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "索引",
+			"item": [
+				{
+					"name": "查询索引",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/_search",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查询所有索引",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/_cat/indices?v",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"_cat",
+								"indices"
+							],
+							"query": [
+								{
+									"key": "v",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "创建一个名为customer的索引",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/customer?pretty",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"customer"
+							],
+							"query": [
+								{
+									"key": "pretty",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "创建或更新一条记录在customer索引里",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"yuzhiyi\"}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/customer/_doc/1?pretty",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"customer",
+								"_doc",
+								"1"
+							],
+							"query": [
+								{
+									"key": "pretty",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "删除一个名为customer的索引",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"yuzhiyi\"}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/customer?pretty",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"customer"
+							],
+							"query": [
+								{
+									"key": "pretty",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://192.168.14.33:9200/filebeat-6.4.2-2018.10.16/_doc/2?pretty",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"yuzhiyi\"}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/filebeat-6.4.2-2018.10.16/_doc/2?pretty",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"filebeat-6.4.2-2018.10.16",
+								"_doc",
+								"2"
+							],
+							"query": [
+								{
+									"key": "pretty",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "文档",
+			"item": [
+				{
+					"name": "更新一条记录在customer索引里",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"doc\":{\"name\":\"yuzhier\",\"age\":20}}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/customer/_doc/1/_update?pretty",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"customer",
+								"_doc",
+								"1",
+								"_update"
+							],
+							"query": [
+								{
+									"key": "pretty",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "创建多条记录在customer索引里",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"index\":{\"_id\":\"3\"}}\r\n{\"name\": \"yuzhiyi3\" }\r\n{\"index\":{\"_id\":\"4\"}}\r\n{\"name\": \"yuzhiyi 4\" }\r\n"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/customer/_doc/_bulk?pretty",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"customer",
+								"_doc",
+								"_bulk"
+							],
+							"query": [
+								{
+									"key": "pretty",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "更新多条记录在customer索引里",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"update\":{\"_id\":\"3\"}}\r\n{\"doc\":{\"name\": \"yuzhiyi3 update\" }}\r\n{\"delete\":{\"_id\":\"4\"}}\r\n\r\n"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/customer/_doc/_bulk?pretty",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"customer",
+								"_doc",
+								"_bulk"
+							],
+							"query": [
+								{
+									"key": "pretty",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "更新一条记录在customer索引里使用脚本",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"script\" : \"ctx._source.age += 5\"\r\n}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/customer/_doc/1/_update?pretty",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"customer",
+								"_doc",
+								"1",
+								"_update"
+							],
+							"query": [
+								{
+									"key": "pretty",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "删除一条记录在customer索引里",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/customer/_doc/1?pretty",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"customer",
+								"_doc",
+								"1"
+							],
+							"query": [
+								{
+									"key": "pretty",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "创建一条记录在customer索引里",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"yuzhiyi\"}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/customer/_doc/?pretty",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"customer",
+								"_doc",
+								""
+							],
+							"query": [
+								{
+									"key": "pretty",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查询一条记录在customer索引里",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"yuzhiyi\"}"
+						},
+						"url": {
+							"raw": "http://192.168.14.33:9200/customer/_doc/1?pretty",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"14",
+								"33"
+							],
+							"port": "9200",
+							"path": [
+								"customer",
+								"_doc",
+								"1"
+							],
+							"query": [
+								{
+									"key": "pretty",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
